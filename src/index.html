@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    window.nodeRequire = require;
+    delete window.require;
+    delete window.exports;
+    delete window.module;
+  </script>  
+  <meta charset="UTF-8">
+  <title>RENEWAL CONVERSION</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link href="../assets/open-iconic-master/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+  <script src="../assets/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">SMALL COMERCIAL API CALL</a>
+    </nav>
+    <hr />
+    <div class="row">
+        <div class="alert alert-danger col-12" role="alert" id="alertBox" style="display:none;">
+            <strong id="message"></strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="alert alert-success col-12" role="alert" id="messagebox" style="display:none;">
+            <strong id="success-msg"></strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <hr/>
+    </div>
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="api-configure">
+            <h5 class="mb-0">
+                <button class="btn btn-link" data-toggle="collapse" data-target="#api-configure-form" aria-expanded="true" aria-controls="api-configure-form">
+                    <span class="oi oi-plus"> Configure Web API</span>
+                </button>
+            </h5>
+            </div>
+        
+            <div id="api-configure-form" class="collapse" aria-labelledby="api-configure" data-parent="#accordion">
+                <div class="card-body">
+                    <div  class="col-12">
+                        <form>
+                            <div class="form-group row">
+                                <label for="api-url" class="col-sm-4 col-form-label">WebService URL</label>
+                                <div class="col-sm-8">
+                                <input type="text" class="form-control" id="api-url" placeholder="Please provide the web-api url">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="payload" class="col-sm-4 col-form-label">Payload</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="payload" placeholder="Payload"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary col-12" type="submit" id="btn-configure">Configure</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="api-payload-generate">
+            <h5 class="mb-0">
+                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#api-payload" aria-expanded="false" aria-controls="collapseTwo" id="btn-generate-payload">
+                        <span class="oi oi-plus"> Generate Payload</span>
+                </button>
+            </h5>
+            </div>
+            <div id="api-payload" class="collapse" aria-labelledby="api-payload-generate" data-parent="#accordion">
+            <div class="card-body">
+                <div class="row">
+                    <select class="btn btn-info col-4" id="dropdown-menu-parent" >
+                    </select>
+                    <button class="btn btn-dark col-4" id="btn-get-template">Get Template</button>
+                    <button class="btn btn-light col-4" id="btn-gen-payload">Create Payload</button>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="card">
+                <div class="card-header" id="api-payload-generate">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#api-payload" aria-expanded="false" aria-controls="collapseTwo" id="btn-generate-payload">
+                            <span class="oi oi-plus"> Process WebService</span>
+                    </button>
+                </h5>
+                </div>
+                <div id="api-payload" class="collapse" aria-labelledby="api-payload-generate" data-parent="#accordion">
+                <div class="card-body">
+                    <div class="row">
+                        <button class="btn btn-dark col-6" id="btn-select-file">Select File</button>
+                        <button class="btn btn-light col-6" id="btn-select-folder">Select Folder</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script src="./main.js"></script>
+</body>
+
+
+</html>
