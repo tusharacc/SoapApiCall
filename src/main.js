@@ -5,6 +5,7 @@ const _ = nodeRequire('lodash');
 const fl = nodeRequire('./file');
 const fs = nodeRequire('fs');
 const path = nodeRequire('path');
+const soap = nodeRequire('./soap');
 
 let btnConfigure = document.getElementById('btn-configure');
 let btnGeneratePayload = document.getElementById('btn-generate-payload');
@@ -14,10 +15,21 @@ let btnSelectFile = document.getElementById('btn-select-file');
 let btnSelectFolder = document.getElementById('btn-select-folder')
 
 let displayError = (errMsg) => {
-    document.getElementById('alertBox').style.display = 'inline'
-    document.getElementById('message').innerHTML = errMsg
+    let elem = document.getElementById('alertBox'); 
+    elem.style.display = 'inline';
+    document.getElementById('message').innerHTML = errMsg;
     setTimeout(() => {
-        $("#alertBox").alert('close');
+        document.getElementById('message').innerHTML = null
+        document.getElementById('alertBox').style.display = 'none';
+    },5000)
+}
+
+let displayMsg = (msg) => {
+    document.getElementById('messagebox').style.display = 'inline';
+    document.getElementById('success-msg').innerHTML = msg;
+    setTimeout(() => {
+        document.getElementById('success-msg').innerHTML = null
+        document.getElementById('messagebox').style.display = 'none';
     },5000)
 }
 
@@ -25,27 +37,62 @@ btnSelectFile.addEventListener('click',() => {
     dialog.showOpenDialog({
         properties: ['openFile']
     },(file) => {
-        let webserviceName = file[0].split('_')[0];
-        fl.readjsondocument(elem.value+'.json').then((data) => {
+        let webserviceName = path.parse(file[0])['name'].split('_')[0];
+        fl.readjsondocument(webserviceName+'.json').then((data) => {
             let url = data['url'];
-        },(err) => {})
+            soap.updateBillingAddress(file[0],url).then((data) => {
+                if (data){
+                    displayError('Processing Failed!!')
+                } else {
+                    displayMsg('File Processed')
+                }
+            });
+        },(err) => {console.log('Error')})
     });
 })
 
 
 btnSelectFolder.addEventListener('click',() => {
+    let result = [];
     dialog.showOpenDialog({
+        filters:[{extensions: ['*']}],
         properties: ['openDirectory']
     },(folder) => {
+        fs.readdir(folder[0],(err,files) => {
+            if (err) throw err;
+            files.forEach((file,index) => {
+                let webserviceName = path.parse(file)['name'].split('_')[0];
+                fl.readjsondocument(webserviceName+'.json').then((data) => {
+                    let url = data['url'];
+                    soap.updateBillingAddress(path.join(folder[0],file),url).then((data) => {
+                        if (data){
+                            result.push(true)
 
+                        } else {
+                            result.push(false);
+
+                        }
+                    });
+                },(err) => {})
+                if (files.length == index + 1){
+                    if (result.every(isTrue)){
+                        displayMsg('WebService Call Success for all files');
+                    } else{
+                        displayError('WebService Call Failed for few/all files');
+                    }
+                }
+            });
+        })
     });
 })
 
+function isTrue(element){
+    return element == true;
+}
 
 btnGetTemplate.addEventListener('click',() => {
     let elem = document.getElementById('dropdown-menu-parent');
     p = path.join((path.normalize(__dirname+'\\..')),'template',elem.value.split('.')[0]+'.xlsx');
-    console.log(p);
     shell.openItem(p);
 });
 
@@ -57,13 +104,12 @@ btnGenPayload.addEventListener('click',() => {
     }, function (file) {
         fl.readjsondocument(elem.value)
         .then(function(result) {
-            console.log(result); // "Stuff worked!"
             if (file !== undefined) {
                 dt = new Date();
-                folder_name = dt.getYear() + "_" + dt.getMonth() + "_" + dt.getDate() + "_" + dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds()
-                fs.mkdirSync('./results/'+folder_name)
-                //console.log(file);
+                folder_name = dt.getFullYear() + "_" + dt.getMonth() + "_" + dt.getDate() + "_" + dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds();
+                fs.mkdirSync('./results/'+folder_name);
                 excelData = excel.readExcel(file[0]);
+                let totalRecords = excelData.length;
                 excelData.forEach((record,index) => {
                     let payload = result['payload'];
                     let val = elem.value;
@@ -74,9 +120,16 @@ btnGenPayload.addEventListener('click',() => {
                     fl.writefile(filepath,payload)
                     .then((result) => {
                         if (result){
-                            write_result.push('Success');
+                            write_result.push(false);
                         } else {
-                            write_result.push('Failed')
+                            write_result.push(true);
+                        }
+                        if (index + 1== totalRecords){
+                            if (write_result.every(isTrue)){
+                                displayMsg('Payload for all records generated');
+                            } else{
+                                displayError('Payload generation failed for few records failed');
+                            }
                         }
                     });    
                 })

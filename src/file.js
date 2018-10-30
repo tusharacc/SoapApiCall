@@ -17,20 +17,14 @@ function message(type,msg){
 exports.writefile = async (filepth,data) => {
     fs.writeFile(filepath,data,(err) => {
         if (err) return false;
-        console.log('Success');
         return true;
     })
 }
 
 exports.readjsondocument = async (filename) => {
     p = './api/' + filename;
-    console.log(p);
     return JSON.parse(fs.readFileSync(p))
-    //, (err, data) => {
-    //    if (err) throw err;
-    //    console.log(JSON.parse(data));
-    //    return JSON.parse(data);
-    //});
+    
 }
 
 exports.writeApiInformation = (json, filename) => {

@@ -1,0 +1,31 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dir="http://ei/crm/direct_bill_account_association_crm19x1">
+	<soapenv:Header/>
+	<soapenv:Body>
+		<dir:AssociatePolicyTerm>
+			<AssociatePolicyTermRequest>
+				<DirectBillAssociationInputs>
+					<ControlNumber>@ControlNumber</ControlNumber>
+					<InceptionDate>@InceptionDate</InceptionDate>
+					<ExpirationDate>@ExpirationDate</ExpirationDate>
+				</DirectBillAssociationInputs>
+				<Insured>
+					<MailingAddress>
+						<AddressLine1>@AddressLine1</AddressLine1>
+						<CityName>@City</CityName>
+						<StateOrProvinceCode>@STate</StateOrProvinceCode>
+						<PostalCode>@PostalCode</PostalCode>
+						<CountryAbbreviation>USA</CountryAbbreviation>
+					</MailingAddress>
+					<CPNumber>@CPNumber</CPNumber>
+				</Insured>
+				<SystemId>Q2</SystemId>
+				<UserId>ITADC1P</UserId>
+				<BookingEntryTypeCode>010</BookingEntryTypeCode>
+				<PaymentScheduleCode>@PaymentSchedule</PaymentScheduleCode>
+				<PolicyNumber>@PolicyNumber</PolicyNumber>
+				<ProducerNumber>@ProducerNumber</ProducerNumber>
+				<ProducerSubNumber>@ProducerSubNumber</ProducerSubNumber>
+			</AssociatePolicyTermRequest>
+		</dir:AssociatePolicyTerm>
+	</soapenv:Body>
+</soapenv:Envelope>
